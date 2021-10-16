@@ -1,15 +1,16 @@
-name: py5coding
+name: birdseye
 channels:
   - conda-forge
 dependencies:
-  - python=3.8
+  - python=3.9
   - cairo
   - cairosvg
-  - jedi=0.17.2
+  - jedi
   - jupyterlab
   - line_profiler
   - noise
-  - openjdk=11.0.8
+  # I installed this via scoop
+  #  - openjdk=11.0.8
   - pip
   - pip:
       - py5
