@@ -12,6 +12,7 @@ def thresholded_component(img, lower, upper, component_idx):
     _, upper_thresh = cv2.threshold(component, upper, 1, cv2.THRESH_BINARY_INV)
     return lower_thresh * upper_thresh
 
+
 # Constants to access YCrCb colorspace
 Y = 0
 Cr = 1
@@ -21,10 +22,17 @@ Cb = 2
 def draw():
     success, img = cap.read()
 
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    blurred = cv2.GaussianBlur(gray, (11, 11), 0)
+    # gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # blurred = cv2.GaussianBlur(gray, (11, 11), 0)
+    ycrcb = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
+    blurred_ycc = cv2.GaussianBlur(ycrcb, (11, 11), 0)
+    y_thresh = thresholded_component(blurred_ycc, 200, 255, Y)
+    cr_thresh = thresholded_component(blurred_ycc, 110, 150, Cr)
+    # cb_thresh = thresholded_component(blurred_ycc, 170, 200, Cb)
 
-    rgb = np.repeat(gray[:,:,np.newaxis], 3, axis=2)
+    combined = y_thresh * (1 - cr_thresh) * 255
+
+    rgb = np.repeat(combined[:,:,np.newaxis], 3, axis=2)
 
     # vid_surface = pygame.image.frombuffer(img.tobytes(), shape, "BGR")
     vid_surface = pygame.image.frombuffer(rgb, shape, "BGR")
